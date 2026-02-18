@@ -1,0 +1,1086 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>
+      Ramon Bakuri | Private Charter Operations &amp; Full-Stack Developer
+    </title>
+    <link rel="icon" href="/pngwing.com.png" type="image/x-icon" />
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries">
+      const canvas = document.getElementById('particleCanvas');
+      const ctx = canvas.getContext('2d');
+
+      let particles = [];
+      const particleCount = 400;
+      let mouse = { x: null, y: null, radius: 200 };
+
+      function resize() {
+          canvas.width = canvas.parentElement.offsetWidth;
+          canvas.height = canvas.parentElement.offsetHeight;
+      }
+
+      window.addEventListener('mousemove', function(event) {
+          const rect = canvas.getBoundingClientRect();
+          mouse.x = event.clientX - rect.left;
+          mouse.y = event.clientY - rect.top;
+      });
+
+      window.addEventListener('mouseout', function() {
+          mouse.x = null;
+          mouse.y = null;
+      });
+
+      class Particle {
+          constructor() {
+              this.reset();
+          }
+
+          reset() {
+              this.x = Math.random() * canvas.width;
+              this.y = Math.random() * canvas.height;
+              this.size = Math.random() * 3 + 1;
+              this.speedX = (Math.random() - 0.5) * 0.6;
+              this.speedY = (Math.random() - 0.5) * 0.6;
+              this.opacity = Math.random() * 0.6 + 0.2;
+          }
+
+          update() {
+              if (mouse.x !== null && mouse.y !== null) {
+                  let dx = mouse.x - this.x;
+                  let dy = mouse.y - this.y;
+                  let distance = Math.sqrt(dx * dx + dy * dy);
+                  if (distance < mouse.radius) {
+                      let forceDirectionX = dx / distance;
+                      let forceDirectionY = dy / distance;
+                      let force = (mouse.radius - distance) / mouse.radius;
+                      let directionX = forceDirectionX * force * 15;
+                      let directionY = forceDirectionY * force * 15;
+
+                      this.x -= directionX;
+                      this.y -= directionY;
+                  }
+              }
+
+              this.x += this.speedX;
+              this.y += this.speedY;
+
+              if (this.x < 0) this.x = canvas.width;
+              if (this.x > canvas.width) this.x = 0;
+              if (this.y < 0) this.y = canvas.height;
+              if (this.y > canvas.height) this.y = 0;
+          }
+
+          draw() {
+              ctx.fillStyle = `rgba(219, 20, 57, ${this.opacity})`;
+              ctx.beginPath();
+              ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+              ctx.fill();
+          }
+      }
+
+      function init() {
+          resize();
+          particles = [];
+          for (let i = 0; i < particleCount; i++) {
+              particles.push(new Particle());
+          }
+      }
+
+      function animate() {
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          particles.forEach(p => {
+              p.update();
+              p.draw();
+          });
+          requestAnimationFrame(animate);
+      }
+
+      window.addEventListener('resize', init);
+      init();
+      animate();
+    </script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+      rel="stylesheet"
+    />
+    <script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              primary: "#db1439",
+              "background-light": "#f8f6f6",
+              "background-dark": "#0a0a0a",
+              "card-dark": "#161616",
+            },
+            fontFamily: {
+              display: ["Inter", "sans-serif"],
+            },
+            borderRadius: {
+              DEFAULT: "0.25rem",
+              lg: "0.5rem",
+              xl: "0.75rem",
+              full: "9999px",
+            },
+            boxShadow: {
+              neon: "0 0 15px rgba(219, 20, 57, 0.4)",
+              "neon-strong": "0 0 25px rgba(219, 20, 57, 0.6)",
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      body {
+        font-family: "Inter", sans-serif;
+        scroll-behavior: smooth;
+        cursor: none;
+      }
+      a,
+      button,
+      [role="button"],
+      .group {
+        cursor: none;
+      }
+      .glass {
+        background: rgba(22, 22, 22, 0.7);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+      }
+      .glass-card {
+        background: rgba(255, 255, 255, 0.03);
+        backdrop-filter: blur(8px);
+        border: 1px solid rgba(219, 20, 57, 0.1);
+        transition: all 0.3s ease;
+      }
+      .glass-card:hover {
+        border-color: rgba(219, 20, 57, 0.5);
+        background: rgba(219, 20, 57, 0.05);
+        transform: translateY(-4px);
+      }
+      @keyframes pulse {
+        0%,
+        100% {
+          transform: scale(1);
+          opacity: 1;
+        }
+        50% {
+          transform: scale(1.2);
+          opacity: 0.8;
+        }
+      }
+      .cursor-square {
+        animation: pulse 2s infinite ease-in-out;
+      }
+      .cursor-hover .cursor-square {
+        transform: rotate(45deg) scale(1.5);
+        animation: pulse 1s infinite ease-in-out;
+        box-shadow: 0 0 20px rgba(219, 20, 57, 0.6);
+      }
+      .cursor-trail {
+        position: fixed;
+        pointer-events: none;
+        border: 1px solid rgba(219, 20, 57, 0.3);
+        transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+        z-index: 9998;
+      }
+      .bg-text-outline {
+        -webkit-text-stroke: 1px rgba(255, 255, 255, 0.03);
+        color: transparent;
+        font-size: 15vw;
+        line-height: 1;
+        pointer-events: none;
+      }
+      @keyframes softGlow {
+        0%,
+        100% {
+          text-shadow: 0 0 5px rgba(219, 20, 57, 0.2);
+          opacity: 0.7;
+        }
+        50% {
+          text-shadow: 0 0 15px rgba(219, 20, 57, 0.6);
+          opacity: 1;
+        }
+      }
+      .animate-soft-glow {
+        animation: softGlow 3s ease-in-out infinite;
+      }
+    </style>
+  </head>
+  <body
+    class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 font-display selection:bg-primary selection:text-white"
+  >
+    <!-- Navigation -->
+    <nav class="fixed top-6 left-1/2 -translate-x-1/2 z-50 w-[95%] max-w-4xl">
+      <div
+        class="glass rounded-full px-8 h-14 flex items-center justify-between border border-white/10"
+      >
+        <div class="flex items-center gap-2">
+          <span class="text-sm font-bold tracking-tighter uppercase"
+            >Ramon <span class="text-primary">.</span></span
+          >
+        </div>
+        <div class="hidden md:flex items-center gap-8">
+          <a
+            class="text-[11px] font-bold uppercase tracking-widest hover:text-primary transition-colors"
+            href="#about"
+            >About</a
+          >
+          <a
+            class="text-[11px] font-bold uppercase tracking-widest hover:text-primary transition-colors"
+            href="#experience"
+            >Experience</a
+          >
+          <a
+            class="text-[11px] font-bold uppercase tracking-widest hover:text-primary transition-colors"
+            href="#projects"
+            >Projects</a
+          >
+          <a
+            class="text-[11px] font-bold uppercase tracking-widest hover:text-primary transition-colors"
+            href="#contact"
+            >Contact</a
+          >
+        </div>
+        <div class="flex items-center gap-4">
+          <a
+            class="text-white/50 hover:text-white transition-colors"
+            href="https://in.linkedin.com/in/ramon-bakuri"
+            ><svg class="size-4 fill-current" viewbox="0 0 24 24">
+              <path
+                d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"
+              ></path></svg
+          ></a>
+          <a
+            class="text-white/50 hover:text-white transition-colors"
+            href="https://github.com/notmeramo"
+            ><svg class="size-4 fill-current" viewbox="0 0 24 24">
+              <path
+                d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"
+              ></path></svg
+          ></a>
+        </div>
+      </div>
+    </nav>
+    <!-- Hero Section -->
+    <section
+      class="relative min-h-screen flex items-center justify-center bg-black overflow-hidden"
+    >
+      <canvas
+        class="absolute inset-0 z-0 pointer-events-none opacity-40"
+        id="particleCanvas"
+      ></canvas>
+
+      <div class="container mx-auto px-6 text-center">
+        <div class="space-y-4">
+          <p
+            class="text-xs font-bold uppercase tracking-[0.3em] text-white/40 mb-2"
+          >
+            I'M RAMON
+          </p>
+          <h1
+            class="text-[12vw] md:text-[10vw] font-black leading-[0.85] tracking-tighter uppercase text-white animate-fade-in-up delay-100"
+          >
+            PRECISION <br />
+            <span class="text-primary">&amp;</span> CODE
+          </h1>
+          <p
+            class="text-sm md:text-base text-white/30 tracking-widest uppercase mt-8 font-medium animate-fade-in-up delay-300"
+          >
+            High-stakes Operations &amp; Full-stack Engineering
+          </p>
+        </div>
+      </div>
+      <!-- Bottom Right: Scroll Indicator -->
+      <div
+        class="absolute bottom-10 right-10 flex flex-col items-center gap-2 group cursor-pointer"
+      >
+        <div class="relative size-16 flex items-center justify-center">
+          <svg
+            class="absolute inset-0 size-full animate-[spin_10s_linear_infinite] origin-center"
+            viewbox="0 0 100 100"
+          >
+            <path
+              d="M 50, 50 m -37, 0 a 37,37 0 1,1 74,0 a 37,37 0 1,1 -74,0"
+              fill="transparent"
+              id="circlePath"
+            ></path>
+            <text
+              class="fill-white/20 text-[8px] font-bold uppercase tracking-[0.2em]"
+            >
+              <textpath xlink:href="#circlePath">
+                Scroll down to explore • Scroll down to explore •
+              </textpath>
+            </text>
+          </svg>
+          <span
+            class="material-symbols-outlined text-white/40 text-sm group-hover:text-white transition-colors"
+            >south</span
+          >
+        </div>
+      </div>
+    </section>
+    <!-- About Me -->
+    <section
+      class="py-24 bg-background-dark bg-gradient-to-b from-black to-background-dark"
+      id="about"
+    >
+      <div class="container mx-auto px-6">
+        <div class="relative">
+          <div
+            class="absolute -top-20 -left-10 bg-text-outline font-black uppercase z-0"
+          >
+            About
+          </div>
+          <div class="grid lg:grid-cols-2 gap-12 items-center relative z-10">
+            <div class="relative group">
+              <div
+                class="absolute -inset-4 bg-primary/20 rounded-2xl blur-3xl group-hover:bg-primary/30 transition-all"
+              ></div>
+              <div
+                class="relative rounded-2xl overflow-hidden border border-white/10 aspect-[4/5] shadow-2xl"
+              >
+                <img
+                  alt="Professional portrait of Ramon Bakuri"
+                  class="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-1000"
+                  src="/ramon.jpeg"
+                />
+              </div>
+            </div>
+            <div class="space-y-8">
+              <div>
+                <h2
+                  class="text-primary font-bold uppercase tracking-widest text-sm mb-4 flex items-center gap-2"
+                >
+                  <span class="w-12 h-[1px] bg-primary"></span> About Me
+                </h2>
+                <h3
+                  class="text-4xl md:text-5xl font-black mb-8 leading-tight text-white"
+                >
+                  Bridging Precision <br />
+                  &amp; Logic
+                </h3>
+                <p class="text-slate-400 leading-relaxed text-lg mb-8">
+                  Professional hybrid expert specializing in
+                  <span class="text-white font-semibold"
+                    >Aviation, MERN Stack, and Project Coordination</span
+                  >.
+                </p>
+                <div class="space-y-6">
+                  <div class="group/item">
+                    <h4
+                      class="text-white font-bold mb-2 flex items-center gap-2"
+                    >
+                      <span class="size-1.5 rounded-full bg-primary"></span>
+                      Technical Mindset
+                    </h4>
+                    <p class="text-sm text-slate-400">
+                      Structured logic and clean code architecture in the MERN
+                      environment, focusing on scalability and performance.
+                    </p>
+                  </div>
+                  <div class="group/item">
+                    <h4
+                      class="text-white font-bold mb-2 flex items-center gap-2"
+                    >
+                      <span class="size-1.5 rounded-full bg-primary"></span>
+                      Aviation Precision
+                    </h4>
+                    <p class="text-sm text-slate-400">
+                      Handling high-stakes VIP logistics with zero margin for
+                      error, ensuring seamless operations in demanding
+                      environments.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- Professional Experience -->
+    <section
+      class="py-24 bg-background-dark border-y border-white/5"
+      id="experience"
+    >
+      <div class="container mx-auto px-6">
+        <div class="text-center mb-20">
+          <h2
+            class="text-primary font-bold uppercase tracking-widest text-sm mb-4"
+          >
+            The Journey
+          </h2>
+          <h3 class="text-5xl font-black text-white">
+            Professional Experience
+          </h3>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
+          <!-- Aviation Focus -->
+          <div class="md:col-span-12 group">
+            <div
+              class="glass-card p-10 rounded-[2rem] border-white/5 hover:border-primary/30 flex flex-col md:flex-row md:items-center justify-between gap-8"
+            >
+              <div class="md:max-w-xl">
+                <div class="flex flex-nowrap items-center gap-3 mb-6">
+                  <span
+                    class="px-4 py-1.5 rounded-full text-xs font-black bg-primary text-white uppercase whitespace-nowrap"
+                    >IT Agency</span
+                  >
+                  <span
+                    class="text-xs font-bold text-white/40 uppercase tracking-widest whitespace-nowrap"
+                    >2026 - Present</span
+                  >
+                </div>
+
+                <h4 class="text-3xl font-black text-white mb-2">Crabstack</h4>
+                <p
+                  class="text-primary font-bold text-sm uppercase tracking-widest"
+                >
+                  Founder &amp; Ceo
+                </p>
+              </div>
+              <p class="text-slate-400 text-lg md:text-xl text-left">
+                Founded Crabstack, a tech startup focused on delivering
+                innovative web solutions and digital products, leading the
+                company strategy, product development, and team growth.
+              </p>
+            </div>
+          </div>
+          <!-- Aviation Focus 2-->
+          <div class="md:col-span-7 group">
+            <div
+              class="glass-card p-10 rounded-[2rem] h-full relative overflow-hidden border-primary/20 hover:border-primary/50"
+            >
+              <div class="absolute top-0 right-0 p-8 opacity-10">
+                <span class="material-symbols-outlined text-[8rem]"
+                  >flight_takeoff</span
+                >
+              </div>
+              <div class="relative z-10">
+                <div class="flex items-center gap-3 mb-6">
+                  <span
+                    class="px-4 py-1.5 rounded-full text-xs font-black bg-primary text-white uppercase"
+                    >Aviation &amp; Ops</span
+                  >
+                  <span
+                    class="text-xs font-bold text-white/40 uppercase tracking-widest"
+                    >2025 - Present</span
+                  >
+                </div>
+                <h4 class="text-3xl font-black text-white mb-2">
+                  Million-Air Jets
+                </h4>
+                <p
+                  class="text-primary font-bold text-sm uppercase mb-8 tracking-widest"
+                >
+                  Private Charter Operations Executive
+                </p>
+                <ul class="space-y-4">
+                  <li class="flex gap-4 items-start">
+                    <span class="material-symbols-outlined text-primary text-xl"
+                      >verified</span
+                    >
+                    <span class="text-slate-400 text-lg"
+                      >Coordinate high-end jets for VIP clients globally.</span
+                    >
+                  </li>
+                  <li class="flex gap-4 items-start">
+                    <span class="material-symbols-outlined text-primary text-xl"
+                      >verified</span
+                    >
+                    <span class="text-slate-400 text-lg"
+                      >Liaise with ATC and handle complex ground
+                      logistics.</span
+                    >
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <!-- Tech Focus 1 -->
+          <div class="md:col-span-5 group">
+            <div
+              class="glass-card p-10 rounded-[2rem] h-full border-white/5 hover:border-primary/30 transition-all"
+            >
+              <div class="flex items-center gap-3 mb-6">
+                <span
+                  class="px-4 py-1.5 rounded-full text-xs font-black bg-white/10 text-white uppercase"
+                  >Analysis</span
+                >
+                <span class="text-xs font-bold text-white/40 uppercase"
+                  >2024</span
+                >
+              </div>
+              <h4 class="text-2xl font-black text-white mb-2">HealthPrime</h4>
+              <p class="text-primary font-bold text-sm uppercase mb-6">
+                Associate Analyst
+              </p>
+              <p class="text-slate-400 leading-relaxed">
+                Specialized in RCM and insurance follow-up, optimizing financial
+                workflows through data-driven technical analysis.
+              </p>
+            </div>
+          </div>
+          <!-- Tech Focus 2 -->
+          <div class="md:col-span-12 group">
+            <div
+              class="glass-card p-10 rounded-[2rem] border-white/5 hover:border-primary/30 flex flex-col md:flex-row md:items-center justify-between gap-8"
+            >
+              <div class="md:max-w-xl">
+                <div class="flex items-center gap-3 mb-6">
+                  <span
+                    class="px-4 py-1.5 rounded-full text-xs font-black bg-white/10 text-white uppercase"
+                    >Leadership</span
+                  >
+                  <span class="text-xs font-bold text-white/40 uppercase"
+                    >Past</span
+                  >
+                </div>
+                <h4 class="text-3xl font-black text-white mb-2">TechBit 4.0</h4>
+                <p
+                  class="text-primary font-bold text-sm uppercase tracking-widest"
+                >
+                  Head of Technical Dept
+                </p>
+              </div>
+              <p class="text-slate-400 text-lg md:text-xl md:text-right">
+                Led multidisciplinary design teams, overseeing branding
+                initiatives and technical project execution from concept to
+                final launch.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- Skills Section -->
+    <section class="py-24 bg-background-dark overflow-hidden" id="skills">
+      <div class="container mx-auto px-6">
+        <div class="flex flex-col lg:flex-row gap-16">
+          <div class="lg:w-1/3">
+            <h2
+              class="text-primary font-bold uppercase tracking-widest text-sm mb-4"
+            >
+              Core Competencies
+            </h2>
+            <h3 class="text-4xl font-bold mb-6">Expertise &amp; Tools</h3>
+            <p class="text-slate-400 mb-8">
+              A comprehensive suite of technologies and tools used to build
+              robust digital experiences and manage operations.
+            </p>
+            <div class="space-y-4">
+              <div class="flex items-center gap-4 text-white">
+                <span class="material-symbols-outlined text-primary"
+                  >check_circle</span
+                >
+                <span>MERN Stack Architecture</span>
+              </div>
+              <div class="flex items-center gap-4 text-white">
+                <span class="material-symbols-outlined text-primary"
+                  >check_circle</span
+                >
+                <span>Aviation Logistics</span>
+              </div>
+              <div class="flex items-center gap-4 text-white">
+                <span class="material-symbols-outlined text-primary"
+                  >check_circle</span
+                >
+                <span>Project Management</span>
+              </div>
+            </div>
+          </div>
+          <div class="lg:w-2/3 grid grid-cols-2 md:grid-cols-4 gap-4">
+            <!-- Web Dev -->
+            <div
+              class="p-6 glass-card rounded-xl text-center flex flex-col items-center justify-center gap-3"
+            >
+              <span class="material-symbols-outlined text-4xl text-primary"
+                >code</span
+              >
+              <span class="font-bold text-sm">MERN Stack</span>
+            </div>
+            <div
+              class="p-6 glass-card rounded-xl text-center flex flex-col items-center justify-center gap-3"
+            >
+              <span class="material-symbols-outlined text-4xl text-primary"
+                >html</span
+              >
+              <span class="font-bold text-sm">HTML5/CSS3</span>
+            </div>
+            <div
+              class="p-6 glass-card rounded-xl text-center flex flex-col items-center justify-center gap-3"
+            >
+              <span class="material-symbols-outlined text-4xl text-primary"
+                >javascript</span
+              >
+              <span class="font-bold text-sm">JavaScript</span>
+            </div>
+            <div
+              class="p-6 glass-card rounded-xl text-center flex flex-col items-center justify-center gap-3"
+            >
+              <span class="material-symbols-outlined text-4xl text-primary"
+                >api</span
+              >
+              <span class="font-bold text-sm">REST APIs</span>
+            </div>
+            <!-- Tools -->
+            <div
+              class="p-6 glass-card rounded-xl text-center flex flex-col items-center justify-center gap-3"
+            >
+              <span class="material-symbols-outlined text-4xl text-slate-500"
+                >database</span
+              >
+              <span class="font-bold text-sm">SQL</span>
+            </div>
+            <div
+              class="p-6 glass-card rounded-xl text-center flex flex-col items-center justify-center gap-3"
+            >
+              <span class="material-symbols-outlined text-4xl text-slate-500"
+                >terminal</span
+              >
+              <span class="font-bold text-sm">Git / VS Code</span>
+            </div>
+            <div
+              class="p-6 glass-card rounded-xl text-center flex flex-col items-center justify-center gap-3"
+            >
+              <span class="material-symbols-outlined text-4xl text-slate-500"
+                >draw</span
+              >
+              <span class="font-bold text-sm">Canva / Figma</span>
+            </div>
+            <div
+              class="p-6 glass-card rounded-xl text-center flex flex-col items-center justify-center gap-3"
+            >
+              <span class="material-symbols-outlined text-4xl text-slate-500"
+                >rocket_launch</span
+              >
+              <span class="font-bold text-sm">Deployment</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- Projects Section -->
+    <section class="py-24 bg-background-dark" id="projects">
+      <div class="container mx-auto px-6">
+        <div class="flex justify-between items-end mb-16">
+          <div>
+            <h2
+              class="text-primary font-bold uppercase tracking-widest text-sm mb-4"
+            >
+              Portfolio
+            </h2>
+            <h3 class="text-4xl font-bold">Featured Projects</h3>
+          </div>
+          <div class="hidden md:block">
+            <p class="text-slate-500 max-w-xs text-right">
+              A selection of my recent work in web development and design.
+            </p>
+          </div>
+        </div>
+        <div class="grid md:grid-cols-2 gap-8">
+          <!-- Project 1 -->
+          <div class="group relative rounded-2xl overflow-hidden glass-card">
+            <div class="h-64 overflow-hidden">
+              <div
+                class="w-full h-full bg-[url('https://images.unsplash.com/photo-1542291026-7eec264c27ff?q=80&amp;w=800')] bg-cover bg-center transition-transform duration-500 group-hover:scale-110"
+                data-alt="High-end sneaker store display"
+              ></div>
+            </div>
+            <div class="p-8">
+              <div class="flex gap-2 mb-4">
+                <span
+                  class="px-2 py-1 rounded text-[10px] font-bold bg-primary/20 text-primary uppercase"
+                  >MERN</span
+                >
+                <span
+                  class="px-2 py-1 rounded text-[10px] font-bold bg-white/10 text-slate-300 uppercase"
+                  >E-Commerce</span
+                >
+              </div>
+              <h4 class="text-2xl font-bold mb-3">ThriftKicks</h4>
+              <p class="text-slate-400 mb-6 text-sm">
+                A specialized thrifted shoes e-commerce platform featuring a
+                responsive UI, inventory management, and smooth payment flows.
+              </p>
+              <div class="flex gap-4">
+                <a
+                  class="text-sm font-bold flex items-center gap-1 text-primary hover:text-white transition-colors"
+                  href="#"
+                >
+                  <span class="material-symbols-outlined text-lg">link</span>
+                  Live Demo
+                </a>
+                <a
+                  class="text-sm font-bold flex items-center gap-1 text-slate-300 hover:text-primary transition-colors"
+                  href="#"
+                >
+                  <span class="material-symbols-outlined text-lg">code</span>
+                  GitHub
+                </a>
+              </div>
+            </div>
+          </div>
+          <!-- Project 2 -->
+          <div class="group relative rounded-2xl overflow-hidden glass-card">
+            <div class="h-64 overflow-hidden">
+              <div
+                class="w-full h-full bg-[url('https://images.unsplash.com/photo-1612178537253-bccd437b730e?q=80&amp;w=800')] bg-cover bg-center transition-transform duration-500 group-hover:scale-110"
+                data-alt="Stylized anime streaming interface concept"
+              ></div>
+            </div>
+            <div class="p-8">
+              <div class="flex gap-2 mb-4">
+                <span
+                  class="px-2 py-1 rounded text-[10px] font-bold bg-primary/20 text-primary uppercase"
+                  >React</span
+                >
+                <span
+                  class="px-2 py-1 rounded text-[10px] font-bold bg-white/10 text-slate-300 uppercase"
+                  >Streaming</span
+                >
+              </div>
+              <h4 class="text-2xl font-bold mb-3">ramoWatch</h4>
+              <p class="text-slate-400 mb-6 text-sm">
+                Premium anime streaming interface integrated with a dedicated
+                merch store, focusing on community engagement and high-speed
+                delivery.
+              </p>
+              <div class="flex gap-4">
+                <a
+                  class="text-sm font-bold flex items-center gap-1 text-primary hover:text-white transition-colors"
+                  href="#"
+                >
+                  <span class="material-symbols-outlined text-lg">link</span>
+                  Live Demo
+                </a>
+                <a
+                  class="text-sm font-bold flex items-center gap-1 text-slate-300 hover:text-primary transition-colors"
+                  href="#"
+                >
+                  <span class="material-symbols-outlined text-lg">code</span>
+                  GitHub
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- Education & Certifications -->
+    <section class="py-24 bg-background-dark/50 border-t border-white/5">
+      <div class="container mx-auto px-6">
+        <div class="grid lg:grid-cols-2 gap-12">
+          <div>
+            <h3 class="text-3xl font-bold mb-10 flex items-center gap-3">
+              <span class="material-symbols-outlined text-primary">school</span>
+              Education
+            </h3>
+            <div class="glass-card p-6 rounded-xl">
+              <div class="flex justify-between items-start mb-2">
+                <h4 class="font-bold text-lg">BS in Information Technology</h4>
+                <span class="text-primary font-bold">Mumbai</span>
+              </div>
+              <p class="text-slate-300">
+                Tolani College of Commerce &amp; Science
+              </p>
+              <p class="text-sm text-slate-500 mt-4">
+                Focused on software architecture, database management, and
+                networking fundamentals.
+              </p>
+            </div>
+          </div>
+          <div>
+            <h3 class="text-3xl font-bold mb-10 flex items-center gap-3">
+              <span class="material-symbols-outlined text-primary"
+                >verified</span
+              >
+              Certifications
+            </h3>
+            <div class="glass-card p-6 rounded-xl">
+              <h4 class="font-bold text-lg mb-2">Professional Web Designing</h4>
+              <p class="text-slate-300 mb-4">
+                Advanced UI/UX &amp; Frontend Development
+              </p>
+              <div class="flex flex-wrap gap-2">
+                <span
+                  class="px-3 py-1 bg-white/5 rounded-full text-xs border border-white/10"
+                  >Figma</span
+                >
+                <span
+                  class="px-3 py-1 bg-white/5 rounded-full text-xs border border-white/10"
+                  >JavaScript (ES6+)</span
+                >
+                <span
+                  class="px-3 py-1 bg-white/5 rounded-full text-xs border border-white/10"
+                  >Responsive Design</span
+                >
+                <span
+                  class="px-3 py-1 bg-white/5 rounded-full text-xs border border-white/10"
+                  >Tailwind CSS</span
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- Contact Section -->
+    <section class="py-24 relative overflow-hidden bg-black" id="contact">
+      <!-- Abstract Decoration -->
+      <div class="container mx-auto px-6 relative z-10">
+        <div
+          class="w-full max-w-7xl mx-auto flex flex-col min-h-[70vh] justify-between py-12"
+        >
+          <!-- Main Typography Section -->
+          <div class="relative py-12">
+            <div
+              class="text-white/40 text-[11px] font-bold tracking-widest uppercase mb-4"
+            >
+              Let’s turn coffee into code.
+            </div>
+            <h2
+              class="text-[14vw] font-black leading-[0.85] tracking-tighter uppercase text-white mb-12"
+            >
+              LET'S CONNECT
+            </h2>
+            <!-- Social Buttons -->
+            <div class="flex flex-wrap gap-3">
+              <a
+                class="px-8 py-3 bg-transparent hover:bg-white/5 text-white/80 hover:text-white rounded-full text-[11px] font-bold tracking-[0.2em] uppercase border border-white/10 hover:border-primary/50 transition-all flex items-center gap-2 hover:shadow-neon"
+                href="/ramon-cv.pdf"
+              >
+                RESUME
+                <span class="material-symbols-outlined text-xs"
+                  >north_east</span
+                >
+              </a>
+              <a
+                class="px-8 py-3 bg-transparent hover:bg-white/5 text-white/80 hover:text-white rounded-full text-[11px] font-bold tracking-[0.2em] uppercase border border-white/10 hover:border-primary/50 transition-all flex items-center gap-2 hover:shadow-neon"
+                href="https://github.com/notmeramo"
+              >
+                GITHUB
+                <span class="material-symbols-outlined text-xs"
+                  >north_east</span
+                >
+              </a>
+              <a
+                class="px-8 py-3 bg-transparent hover:bg-white/5 text-white/80 hover:text-white rounded-full text-[11px] font-bold tracking-[0.2em] uppercase border border-white/10 hover:border-primary/50 transition-all flex items-center gap-2 hover:shadow-neon"
+                href="https://in.linkedin.com/in/ramon-bakuri"
+              >
+                LINKEDIN
+                <span class="material-symbols-outlined text-xs"
+                  >north_east</span
+                >
+              </a>
+            </div>
+          </div>
+          <!-- Header row -->
+          <div
+            class="flex justify-end items-center text-[11px] font-bold tracking-[0.3em] text-white uppercase mb-20"
+          >
+            <a class="flex items-center gap-2 group" href="#hero">
+              <span
+                class="text-white/60 group-hover:text-white transition-colors"
+                >BACK TO TOP</span
+              >
+              <span
+                class="material-symbols-outlined size-8 flex items-center justify-center border border-white/20 rounded-full text-sm group-hover:border-white transition-colors"
+              >
+                north
+              </span>
+            </a>
+          </div>
+
+          <!-- Bottom Note -->
+        </div>
+      </div>
+    </section>
+    <!-- Map/Location Footer -->
+    <footer class="bg-background-dark py-12 border-t border-white/5">
+      <div class="container mx-auto px-6 text-center">
+        <div class="mb-8 opacity-50">
+          <span class="material-symbols-outlined text-4xl text-primary"
+            >location_on</span
+          >
+          <p class="text-lg font-medium mt-2">Based in Mumbai, India</p>
+          <div class="hidden" data-location="Mumbai" style=""></div>
+        </div>
+        <div class="text-slate-600 text-sm">
+          Developed by
+          <span class="text-primary font-bold animate-soft-glow">Ramon</span>
+        </div>
+      </div>
+    </footer>
+    <script>
+      const canvas = document.getElementById("particleCanvas");
+      const ctx = canvas.getContext("2d");
+
+      let particles = [];
+      const particleCount = 400;
+      let mouse = { x: null, y: null, radius: 200 };
+
+      function resize() {
+        canvas.width = canvas.parentElement.offsetWidth;
+        canvas.height = canvas.parentElement.offsetHeight;
+      }
+
+      window.addEventListener("mousemove", function (event) {
+        const rect = canvas.getBoundingClientRect();
+        mouse.x = event.clientX - rect.left;
+        mouse.y = event.clientY - rect.top;
+      });
+
+      window.addEventListener("mouseout", function () {
+        mouse.x = null;
+        mouse.y = null;
+      });
+
+      class Particle {
+        constructor() {
+          this.reset();
+        }
+
+        reset() {
+          this.x = Math.random() * canvas.width;
+          this.y = Math.random() * canvas.height;
+          this.size = Math.random() * 3 + 1;
+          this.speedX = (Math.random() - 0.5) * 0.6;
+          this.speedY = (Math.random() - 0.5) * 0.6;
+          this.opacity = Math.random() * 0.6 + 0.2;
+        }
+
+        update() {
+          if (mouse.x !== null && mouse.y !== null) {
+            let dx = mouse.x - this.x;
+            let dy = mouse.y - this.y;
+            let distance = Math.sqrt(dx * dx + dy * dy);
+            if (distance < mouse.radius) {
+              let forceDirectionX = dx / distance;
+              let forceDirectionY = dy / distance;
+              let force = (mouse.radius - distance) / mouse.radius;
+              let directionX = forceDirectionX * force * 15;
+              let directionY = forceDirectionY * force * 15;
+
+              this.x -= directionX;
+              this.y -= directionY;
+            }
+          }
+
+          this.x += this.speedX;
+          this.y += this.speedY;
+
+          if (this.x < 0) this.x = canvas.width;
+          if (this.x > canvas.width) this.x = 0;
+          if (this.y < 0) this.y = canvas.height;
+          if (this.y > canvas.height) this.y = 0;
+        }
+
+        draw() {
+          ctx.fillStyle = `rgba(219, 20, 57, ${this.opacity})`;
+          ctx.beginPath();
+          ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+
+      function init() {
+        resize();
+        particles = [];
+        for (let i = 0; i < particleCount; i++) {
+          particles.push(new Particle());
+        }
+      }
+
+      function animate() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        particles.forEach((p) => {
+          p.update();
+          p.draw();
+        });
+        requestAnimationFrame(animate);
+      }
+
+      window.addEventListener("resize", init);
+      init();
+      animate();
+    </script>
+    <div
+      class="fixed top-0 left-0 w-8 h-8 pointer-events-none z-[9999] flex items-center justify-center -translate-x-1/2 -translate-y-1/2 mix-blend-difference"
+      id="custom-cursor"
+    >
+      <div
+        class="cursor-square size-3 bg-primary transition-all duration-300 ease-out"
+      ></div>
+    </div>
+    <script>
+      const cursor = document.getElementById("custom-cursor");
+      const square = cursor.querySelector(".cursor-square");
+      let mouseX = 0,
+        mouseY = 0;
+      let cursorX = 0,
+        cursorY = 0;
+
+      document.addEventListener("mousemove", (e) => {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+        createTrail(e.clientX, e.clientY);
+      });
+
+      function createTrail(x, y) {
+        const trail = document.createElement("div");
+        trail.className = "cursor-trail size-3";
+        trail.style.left = `${x - 6}px`;
+        trail.style.top = `${y - 6}px`;
+        if (cursor.classList.contains("cursor-hover")) {
+          trail.style.transform = "rotate(45deg)";
+        }
+        document.body.appendChild(trail);
+
+        setTimeout(() => {
+          trail.style.opacity = "0";
+          trail.style.transform += " scale(2)";
+          setTimeout(() => trail.remove(), 500);
+        }, 50);
+      }
+
+      const animateCursor = () => {
+        let dx = mouseX - cursorX;
+        let dy = mouseY - cursorY;
+
+        cursorX += dx * 0.2;
+        cursorY += dy * 0.2;
+
+        cursor.style.transform = `translate3d(${cursorX}px, ${cursorY}px, 0)`;
+        requestAnimationFrame(animateCursor);
+      };
+      animateCursor();
+
+      const interactiveElements = document.querySelectorAll(
+        "a, button, h1, h2, h3, .group, span, p"
+      );
+
+      interactiveElements.forEach((el) => {
+        el.addEventListener("mouseenter", () => {
+          cursor.classList.add("cursor-hover");
+        });
+        el.addEventListener("mouseleave", () => {
+          cursor.classList.remove("cursor-hover");
+        });
+      });
+    </script>
+  </body>
+</html>
